@@ -1,0 +1,44 @@
+!@D1
+conf t
+  ip dhcp pool SERVERPOOL
+  network 192.168.1.128 255.255.255.224
+  default-router 192.168.1.129
+  dns-server 192.168.1.129
+  domain-name SERVER.COM
+  exit
+interface e1/0
+  switchport mode access
+  switchport access vlan 100
+  end
+
+
+!@D2
+conf t
+  ip dhcp pool DNSPOOL
+  network 10.2.2.0 255.255.255.0
+  default-router 10.2.2.2
+  dns-server 10.2.2.2
+  domain-name DNS.COM
+  exit
+conf t
+ interface e1/0
+  switchport mode access
+  switchport access vlan 20
+  end
+
+
+!@S1 
+conf t
+ interface e1/0
+  no shut
+  ip add dhcp
+  end
+sh ip int br | ex una
+
+!@S2 
+conf t
+ interface e1/0
+  no shut
+  ip add dhcp
+  end
+sh ip int br | ex una
