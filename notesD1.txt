@@ -1,0 +1,132 @@
+~~~
+!@Cisco
+conf t
+ ip http server
+ ip http secure-server
+ ip http authentication local
+ username admin priv 15 secret pass
+ restconf
+ end
+~~~
+
+
+Decrypt TLS Traffic
+Environment Variables > New
+ Name: SSLKEYLOGFILE
+ Desc: File path
+
+or
+
+Wireshark
+
+Tools > TLS Keylog Launcher
+Log file: Desktop/SSLKEY.log
+Launcher: Firefox
+
+
+https://<router-ip>/restconf/data/
+
+curl -k -u admin:pass -H "Accept: application/yang-data+json" https://192.168.102.11/restconf/data/ietf-yang-library:modules-state -o modules.json
+curl -k -u admin:pass -H "Accept: application/yang-data+json" https://10.32.32.1/restconf/data/ietf-interfaces:interfaces -o interfaces.json
+
+Schema
+Interfaces
+Interface-state
+
+CoreBaba
+conf t
+monitor session 1 source interface fa0/3, fa0/5, fa0/7
+monitor session 1 destination interface fa0/1, fa0/9
+end
+
+conf t 
+no monitor session 1 
+end
+
+
+LOADBALANCE
+
+!@D1
+conf t
+ip dhcp excluded-address 10.2.1.1   10.2.1.99
+ip dhcp excluded-address 10.2.1.200   10.2.1.254
+ip dhcp pool MGMTPOOL
+ network 10.2.1.0   255.255.255.0
+ default-router 10.2.1.1
+ dns-server	10.2.1.1
+ domain-name D2.COM
+end
+
+!@D2
+conf t
+ip dhcp excluded-address 10.2.1.1   10.2.1.199
+ip dhcp pool MGMTPOOL
+ network 10.2.1.0   255.255.255.0
+ default-router 10.2.1.2
+ dns-server	10.2.1.2
+ domain-name D2.COM
+end
+
+
+!@A1
+conf t 
+int e0/0
+switchport mode access
+switchport access vlan 10
+end
+
+!@A2
+conf t 
+int e1/0
+switchport mode access
+switchport access vlan 10
+end
+
+
+!@P1
+conf t
+ int e0/0
+  no shut
+  ip add dhcp
+ end
+
+!@P2
+conf t
+ int e1/0
+  no shut
+  ip add dhcp
+ end
+
+
+
+
+Configure D2 as a DHCP Server for VLAN 20
+
+Network: 10.2.2.0	255.255.255.0
+Gateway: D2
+Domain Name: DNS.COM
+DNS : D2
+
+Exclude the first 100 IPs
+
+
+!@D2 
+conf t
+ ip dhcp excluded-address 10.2.2.1 10.2.2.100
+ ip dhcp pool POOL
+  network 10.2.2.0 255.255.255.0
+  default-router 10.2.2.2
+  dns-server 10.2.2.2
+  domain-name DNS.COM
+  !
+  int e1/0
+  switchport mode access
+  switchport access clan 20
+  end
+
+!@S2
+conf t
+ int e1/0
+  no shut
+  ip add dhcp
+  end
