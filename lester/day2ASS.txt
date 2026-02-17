@@ -1,0 +1,40 @@
+sample: 85 agents
+c: 7b
+s:/32-/7 = /25
+ipasok128isa4th:
+172.18.0.128/25 + 1
+1st: 172.18.0.129
+Last: 172.18.0.255
+172.18.1.0
+
+
+sample: 12 REMOTEVPN.COM
+c: 4b
+s:/32-/4 = /28
+ipasok16isa4th:
+172.28.0.16/24 + 1
+1st: 172.28.0.17
+Last: 172.28.0.31
+172.28.0.32
+
+PSBANK.COM.PH : 3500
+VLAN : 33
+sample: 3500 agents
+c: 12b
+s:/32-/12 = /20
+ipasok16isa3rd:
+10.0.8.0/16 + 1
+1st: 10.0.16.1
+Last: 10.0.31.255
+10.0.32.0/20
+
+PAGCOR.COM.PH : 355
+VLAN : 88
+sample: 355 agents
+c: 9b
+s:/32-/9 = /23
+ipasok2isa3rd:
+10.0.2.0/23 + 1
+1st: 10.0.2.1
+Last: 10.0.3.255
+10.0.4.0/23
