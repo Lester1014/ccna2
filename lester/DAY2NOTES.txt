@@ -1,0 +1,204 @@
+DECIMAL			BINARY			HEX
+PING 8.8.8.8		PING 101010110111	
+
+
+	2r_		binaryLength
+2n4 = 2x2x2x2 = 16 = 1 0000 = 5bits
+
+195 = 8b
+13 = 4b
+1750 = 11b
+855 = 10b
+2700 = 12b
+2 = 2b
+376 = 9b
+888 = 10b
+8 = 4b
+212 = 8b
+4500 = 13b
+81 = 7b
+10500 = 14b
+55 = 6b
+
+how to subnet ipv4/ipv6.
+10.0.0.0/8 = 16m
+ex1: design/ implement Accenture.com subnet using 10.0.0.0/8[16m]
+with: rivanCsi method: convertit, subtractit, ipasoksaHiwa:
+1500 agents:
+C:11b
+S:/32-11 = /21
+ipasok 8i3rdHiwa:
+netAddress:
+10.0.8.0/21 + 1
+1st: 10.0.8.1
+Last: 10.0.15.255
+ 10.0.16.0/21
+
+
+sample: 850 agents
+c: 10b
+s:/32-/10 = /22
+ipasok4isa3rd:
+10.0.4.0/22 + 1
+1st: 10.0.4.1
+Last: 10.0.7.255
+
+
+sample: 4500 agents
+c: 13b
+s:/32-/13 = /19
+ipasok32isa3rd:
+10.0.32.0/19 + 1
+1st: 10.0.32.1
+Last: 10.0.63.255
+10.0.64.0
+
+sample: 50 agents
+c: 6b
+s:/32-/6 = /26
+ipasok64isa4th:
+10.0.0.64/26 + 1
+1st: 10.0.0.65
+Last: 10.0.0.127
+10.0.0.128/26
+
+sample: 358 agents
+c: 9b
+s:/32-/9 = /23
+ipasok2isa3rd:
+10.0.2.0/23 + 1
+1st: 10.0.2.1
+Last: 10.0.3.255
+10.0.4.0/23
+
+sample: 210 agents
+c: 8b
+s:/32-/8 = /24
+ipasok1isa3rd:
+10.0.1.0/24 + 1
+1st: 10.0.1.1
+Last: 10.0.1.255
+10.0.2.0/24
+
+
+
+Example:
+
+BPI : 2500
+VLAN : 23
+sample: 2500 agents
+c: 12b
+s:/32-/12 = /20
+ipasok16isa3rd:
+10.0.16.0/20 + 1
+1st: 10.0.16.1
+Last: 10.0.31.255
+10.0.32.0/24
+
+BDO : 1200
+VLAN : 168
+sample: 1200 agents
+c: 12b
+s:/32-/11 = /21
+ipasok8isa3rd:
+10.0.8.0/20 + 1
+1st: 10.0.8.1
+Last: 10.0.15.255
+10.0.16.0/24
+
+
+sample: 25 agents
+c: 5b
+s:/32-/5 = /27
+ipasok32isa4th:
+172.16.0.32/27 + 1
+1st: 172.16.0.33
+Last: 172.16.0.63
+172.16.0.64
+
+
+sample: 50 agents
+c: 6b
+s:/32-/6 = /26
+ipasok64isa4th:
+172.16.0.64/26 + 1
+1st: 172.16.0.65
+Last: 172.16.0.127
+172.16.0.128
+
+sample: 85 agents
+c: 7b
+s:/32-/7 = /25
+ipasok128isa4th:
+172.18.0.128/25 + 1
+1st: 172.18.0.129
+Last: 172.18.0.255
+172.18.1.0
+
+
+
+TemPlate_CoreSW:
+D1:
+config t
+vlan 151
+ name VPN.UB.PH
+ exit
+Int vlan 151
+ no shut
+ ip add 172.18.0.129 255.255.255.128
+ip dhcp excluded-add 172.18.0.129 172.18.0.141
+ip dhcp pool VPN.UB.PH
+ network 172.18.0.129 255.255.255.128
+ default-router 172.18.0.129
+ domain-name VPN.UB.PH
+ dns-server 10.32.1.10
+ option 150 ip 10.32.100.8
+ D2:
+ config t
+  Int e1/0
+    swi mode access
+    swi access vlan 151
+	end
+	sh vlan br
+S2:
+config t
+ Int e1/0
+ ip address dhcp
+ no shut
+ do bp
+
+
+
+
+TASK3: IPV4 SUNETTING MAXIMMALLY
+Ex1. design a network using 10.0.0.0/8 to Maximaize/ Fullyutilize for 64 offices/subnets/regionals"CAI METHOD": convert, add, ipasok
+
+Convert to 2r6 = 64, p6
+Addto/orig: /8+/6 = /14
+ipasoksi41sa2nd:
+1stoffice: 10.4.0.0/14
+2ndoffice: 10.8.0.0/14
+3rdoffice: 10.12.0.0/14
+4thoffice: 10.16.0.0/14
+5thoffice: 10.20.0.0/14
+.....
+
+Ex2. design a network using 10.0.0.0/8 to Maximaize/ Fullyutilize for 16 offices/subnets/regionals"CAI METHOD": convert, add, ipasok
+Convert to 2r4 = 16, p4
+Addto/orig: /8+/4 = /12
+ipasok16isa2nd:
+1stoffice: 10.16.0.0/12
+2ndoffice: 10.32.0.0/12
+3rdoffice: 10.48.0.0/12
+4thoffice: 10.64.0.0/12
+5thoffice: 10.80.0.0/12
+
+Ex3. design a network using 10.0.0.0/8 to Maximaize/ Fullyutilize for 8 offices/subnets/regionals"CAI METHOD": convert, add, ipasok
+Convert to 2r3 = , p3
+Addto/orig: /8+/3 = /11
+ipasok64isa2nd:
+1stoffice: 10.32.0.0/11
+2ndoffice: 10.64.0.0/11
+3rdoffice: 10.96.0.0/11
+4thoffice: 10.128.0.0/11
+5thoffice: 10.160.0.0/11
