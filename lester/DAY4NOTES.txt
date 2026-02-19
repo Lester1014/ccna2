@@ -1,0 +1,192 @@
+!@UTM-PH
+config t
+ no ip access-list standard NOTOR
+ ip access-list standard NOTOR
+  deny  162.159.0.0	0.0.255.255	
+  deny	172.67.0.0	0.0.255.255   
+  deny	76.223.0.0	0.0.255.255 
+  deny	104.21.0.0	0.0.255.255 
+  deny 	104.21.0.0	0.0.255.255
+  deny 	104.26.0.0	0.0.255.255
+  permit any 
+ int gi 1
+  ip access-group NOTOR in
+  end
+show ip access-list int g1
+
+
+conf t
+int gi 1
+  no ip access-group NOTOR in
+  end
+
+
+
+162.159.0.0	0.0.255.255
+172.67.0.0	0.0.255.255	
+76.223.0.0	0.0.255.255
+104.21.0.0	0.0.255.255
+104.21.0.0	0.0.255.255
+104.26.0.0	0.0.255.255
+
+-------------------------
+config t
+ ip host bet11.com 208.8.8.11
+ service finger
+ service tcp-small-servers
+ service udp-small-servers
+ ip dns server
+ ip http server
+ ip http secure-server
+ telephony-service
+  no auto-reg-ephone
+  max-ephones 5
+  max-dn 20
+  ip source-address 208.8.8.11 port 2000
+  exit
+ voice service voip
+  allow-connections h323 to sip
+          
+  allow-connections sip to h323
+  allow-connections sip to sip
+  supplementary-service h450.12
+ sip
+   bind control source-interface g4
+   bind media source-interface g4
+   registrar server expires max 600 min 60
+ voice register global
+  mode cme
+  source-address 208.8.8.11 port 5060
+  max-dn 12
+  max-pool 12
+  authenticate register
+  create profile sync syncinfo.xml
+  end
+
+
+Task 4: bet11.com : ssh, ping, sip, sccp, dns
+
+config t
+ no ip access-list extended FWP10
+ ip access-list extended FWP10
+  
+  permit tcp any host bet11.com eq 22 log
+  permit icmp any host bet11.com log
+  permit tcp any host bet11.com eq 5060 log
+  permit tcp any host bet11.com eq 2000 log
+  permit tcp any host bet11.com eq 53 log
+
+  exit
+ !
+ int gi 1
+  ip access-group FWP10 in
+  end
+show ip access-list int g1
+
+conf t
+int gi 1
+  no ip access-group FWP11 in
+  end
+
+
+Task 5:
+bet11.com open the ff ports:
+	telnet, ftp, smtp, MySQL, http, https
+
+config t
+ no ip access-list extended FWP11
+ ip access-list extended FWP11
+  
+  permit tcp any host bet11.com eq 23 log
+  permit tcp any host bet11.com eq 21 log
+  permit tcp any host bet11.com eq 25 log
+  permit tcp any host bet11.com eq 3306 log
+  permit tcp any host bet11.com eq 80 log
+  permit tcp any host bet11.com eq 443 log
+
+  exit
+ !
+ int gi 1
+  ip access-group FWP11 in
+  end
+show ip access-list int g1
+
+
+
+Task 4: Create an extended ACL for `www.bet11.com` that will open the following ports
+SIP, SSH, HTTPS, DNS, SUBMISSION, IMAPS, POP3S, SMTPS, SNMP
+	
+
+config t
+ no ip access-list extended FWP11
+ ip access-list extended FWP11
+  
+  permit tcp any host bet11.com eq 5060 log
+  permit tcp any host bet11.com eq 22 log
+  permit tcp any host bet11.com eq 443 log
+  permit tcp any host bet11.com eq 53 log
+  permit tcp any host bet11.com eq 587 log
+  permit tcp any host bet11.com eq 993 log
+  permit tcp any host bet11.com eq 995 log
+  permit tcp any host bet11.com eq 465 log
+  permit tcp any host bet11.com eq 162 log
+
+  exit
+ !
+ int gi 1
+  ip access-group FWP11 in
+  end
+show ip access-list int g1
+
+
+-------------------------------
+!@UTM-PH
+conf t
+ int g1
+  ip nat outside
+ int g3
+  ip nat inside
+ !
+ no ip access-list extended NAT
+ ip access-list extended NAT
+  permit ip any any
+  exit
+ !
+ ip nat inside source list NAT int g1 overload
+ !
+ no ip nat inside source static tcp  11.11.11.111  80  208.8.8.100  8080
+ end
+
+
+!@UTM-PH
+conf t
+ intg4
+ ip nat inside
+ no ip nat inside source static tcp  10.32.1.4  23  208.8.8.100  2323
+ ip nat inside source static tcp  10.32.1.4  23  208.8.8.100  2000
+ ip nat inside source static tcp  10.32.100.8  23  208.8.8.99  2323
+ 
+ end
+
+
+---------------------------
+!@EDGE-32
+conf t
+ ip nat inside source static tcp  10.32.1.4  23  200.0.0.32  4023
+ !
+ ip nat inside source static tcp  10.32.100.8  23  200.0.0.32     5023
+ ip nat inside source static tcp  10.32.1.6  22  200.0.0.32     9023
+ end
+
+
+
+---------------------
+
+conf t
+ no ip route 0.0.0.0 0.0.0.0 208.8.8.2
+
+conf t
+ ip ssh server algorithm authentication publickey
+ no ip ssh server algorithm authentication password
+ no ip ssh server algorithm authentication keyboard
+ end

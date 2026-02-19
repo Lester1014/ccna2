@@ -1,0 +1,171 @@
+Design an Ipv6 network for 2400 users using the available IPv6 address space of 2001:db8:b:efe:1::/64
+2001:0db8:000b:0efe:0001:0000:0000:0000:/64
+
+C: 2400 = 12 b
+S: /128 - /12 = /116 (8th, 1st ,1i)
+ipasok1isa8th1st
+2001:0db8:000b:0efe:0001:0000:0000:1000:/116 + 1
+
+Network:
+	2001:0db8:000b:0efe:0001:0000:0000:1000:/116
+1st: 
+	2001:0db8:000b:0efe:0001:0000:0000:1001:/64
+Last:
+	2001:0db8:000b:0efe:0001:0000:0000:1fff:/64
+Not: 
+	2001:0db8:000b:0efe:0001:0000:0000:2000:/116
+
+
+
+Design an Ipv6 network for 79 users using the available IPv6 address space of 2001:db8::/64
+2001:0db8:0000:0000:0000:0000:0000:0000:/64
+
+C: 79 = 7 b
+S: /128 - /7 = /121 (8th, 3rd ,8i)
+ipasok8isa8th3rd
+2001:0db8:0000:0000:0000:0000:0000:0080:/121 + 1
+
+Network:
+	2001:0db8:0000:0000:0000:0000:0000:0080:/121
+1st: 
+	2001:0db8:0000:0000:0000:0000:0000:0081:/121
+Last:
+	2001:0db8:0000:0000:0000:0000:0000:00ff:/121
+Not: 
+	2001:0db8:0000:0000:0000:0000:0000:0100:/121
+
+
+
+Subnet for 128 department using 2001:db9:2::/55 Determine the 4th Subnet
+
+C: 128 = 7 b
+A: /55 + /7 = /62 (4th, 4th, 4i)
+ipasok4isa4th4th
+	2001:db9:2:4::/55
+1st: 2001:0db9:0002:0000:0000:0000:0000:0000/55
+2nd: 2001:0db9:0002:0004:0000:0000:0000:0000/55
+3rd: 2001:0db9:0002:0008:0000:0000:0000:0000/55
+4th: 2001:0db9:0002:000c:0000:0000:0000:0000/55
+
+------------------------------
+1. POE, 802.3af, 802.3at, 802.3bt
+2. MAC ADDRESS
+3. DHCP, IP ADDRESS
+4. TFTP, SSCP, SIP
+5. RTP
+6. CODEC, G711, G729
+7. APPLICATION, IP PHONE, RTP PLAYER
+
+PHYSICAL
+V-voltage
+I-interface
+T-transmission  (Electric (UTP))
+		(Laser (Fiber))
+		(RF (Wireless))
+
+
+-------------------------
+!@terminal
+ sudo su
+  > kali
+
+yersinia -G
+
+3557
+a501
+a540
+
+--------------------------------
+Configure SSH
+
+!@CoreBaba
+conf t
+ ip domain name ccna.com
+ crypto key generate rsa modulus 2048 label key
+ ip ssh rsa keypair-name key
+ ip ssh version 2
+ !
+ line vty 0 14
+  login local
+  exit
+ username admin priv 15 secret pass
+ end
+
+
+-----------------------------------
+UTM-PH
+NetAdapters   : VMNet
+NetAdapters 2 : VMNet2
+NetAdapters 3 : VMNet3
+NetAdapters 4 : VMNet4
+
+UTM-JP
+NetAdapters   : NAT
+NetAdapters 2 : VMNet2
+NetAdapters 3 : VMNet4
+
+NETOPS-PH
+ VMNET1
+ VMNET2
+ VMNET3
+BRIDGED
+
+BLDG-JP
+  VMNET4
+
+192.168.101.246
+
+-------------
+FIREWALL
+1. traffic filtering
+2. transport security (VPN, DMVPN, ZTNA)
+3. threat prevention (NGFW)
+4. network segmentation (NAT, Proxy, DMZ)
+5. monitoring, logging, and alerts
+
+
+Task 1: Prevent Traffic only from VLAN 100
+
+!@UTM-PH
+config t
+ no ip access-list extended FWP1
+ ip access-list extended FWP1
+  deny ip  host 10.32.100.8   host 10.32.1.11  log
+  
+  permit ip any any
+  exit
+ !
+ int gi 4
+  ip access-group FWP1 in
+  end
+sh ip access-list int g4
+
+
+ip route 10.0.0.0 255.0.0.0 10.32.1.4
+ip route 200.0.0.0 255.255.255.0 10.32.1.4
+
+!@UTM-PH
+config t
+ no ip access-list extended FWP2
+ ip access-list extended FWP2
+  deny ip  host 10.32.1.10    host 10.32.1.11   log
+  deny ip  host 10.32.32.1    host 10.32.1.11   log
+  permit ip any any
+  exit
+ !
+ int gi 4
+  ip access-group FWP2 in
+  end
+show ip access-list int g4
+
+-----------------
+66.254.114.238	66.254.114.0	0.0.0.255
+66.254.114.79
+66.254.114.41
+66.254.114.234
+104.21.5.229	host 104.21.5.229
+103.224.182.211	host 103.224.182.211
+172.237.146.38	host 103.224.182.211
+208.77.20.35	host 208.77.20.35
+
+
