@@ -1,0 +1,40 @@
+root
+C1sc0123
+ip addr
+http://208.8.8.133/otrs/index.pl
+C1sc0123
+
+
+
+switching : 4 super heroes 
+
+LAN Traffic: 
+
+1:1 vs 			1:255 vs 		1:224
+unicast vs 		broadcast vs 		multicast
+dm: normal vs 		dm: ffffffffff vs 	dm: 01.00.5e
+
+
+STED 	 switchport trunk Encap Dot1Q
+SMT	 switchport mode trunk
+STAV	 switchport trunk allowed vlan 1-100
+STNV	 switchport trunk native vlan 1
+
+
+Switching:
+4 super heroes:
+802.1q	trunking
+802.1d	stp
+802.1w	rapid
+802.1s	Mistp
+hsrp, vrrp, glbp, LACP
+
+
+HOw to be a network engineer in 2026:
+Step1: 1 unique resume = 1 company
+
+use chatgpt to modify: resume as per JD
+
+Step2: BIG RISKS, BIG REWARD.
+bill gates: windows PC, wala pa.
+
